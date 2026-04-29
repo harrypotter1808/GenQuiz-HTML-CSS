@@ -136,7 +136,7 @@ const app = {
       this.navigate('quiz');
     } catch (err) {
       console.error(err);
-      errorEl.textContent = err.message.includes('Failed') ? err.message : 'Failed to generate quiz. Is the backend running?';
+      errorEl.textContent = err.message || 'Failed to generate quiz. Is the backend running?';
       errorEl.style.display = 'block';
     } finally {
       btn.disabled = false;
