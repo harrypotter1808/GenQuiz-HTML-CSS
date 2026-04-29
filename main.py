@@ -15,7 +15,7 @@ api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("GEMINI_API_KEY environment variable not set. Please check your .env file.")
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-2.5-flash', generation_config={"response_mime_type": "application/json"})
+model = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
 
 app = FastAPI(title="GenQuiz Unified API")
 
