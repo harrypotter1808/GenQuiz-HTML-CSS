@@ -86,14 +86,14 @@ Rules you must follow strictly:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a JSON-only API. You must return only valid JSON."
+                    "content": "You are a JSON-only API. You must return only valid JSON. Ensure that the value for each section key is a DIRECT ARRAY of objects (e.g. \"english\": [ {...} ]), DO NOT wrap the array in another object."
                 },
                 {
                     "role": "user",
                     "content": prompt + file_content,
                 }
             ],
-            model="llama-3.1-8b-instant",
+            model="llama-3.3-70b-versatile",
             response_format={"type": "json_object"},
         )
         
