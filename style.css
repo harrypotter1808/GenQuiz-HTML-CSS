@@ -1,0 +1,174 @@
+:root {
+  --bg-color: #0b0c10;
+  --bg-secondary: #1f2833;
+  --text-primary: #c5c6c7;
+  --text-secondary: #8b8c8d;
+  --accent: #66fcf1;
+  --accent-hover: #45a29e;
+  --error: #ff4c4c;
+  --success: #4caf50;
+  --gradient: linear-gradient(135deg, var(--accent), #1f2833);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography styles */
+h1, h2, h3, h4 {
+  font-family: 'Outfit', sans-serif;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(31, 40, 51, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-panel:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px 0 rgba(102, 252, 241, 0.1);
+}
+
+/* Premium Button Styling */
+.btn-primary {
+  background: var(--gradient);
+  color: var(--bg-color);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(102, 252, 241, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 252, 241, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(102, 252, 241, 0.1);
+}
+
+/* Text inputs & areas */
+textarea, input[type="number"], select {
+  width: 100%;
+  background: rgba(11, 12, 16, 0.5);
+  border: 1px solid rgba(197, 198, 199, 0.2);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease;
+}
+
+textarea:focus, input[type="number"]:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Micro Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* App Container */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+/* Quiz Option Button Specifics */
+.quiz-option-btn {
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quiz-option-btn:hover:not(.locked) {
+  background: rgba(255,255,255,0.1);
+}
+
+.quiz-option-btn.locked {
+  cursor: default;
+}
+
+.quiz-option-btn.correct {
+  background: rgba(76, 175, 80, 0.2) !important;
+  border-color: var(--success) !important;
+}
+
+.quiz-option-btn.wrong {
+  background: rgba(255, 76, 76, 0.2) !important;
+  border-color: var(--error) !important;
+}
