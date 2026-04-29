@@ -9,10 +9,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Obscured working API key to prevent GitHub scanner from revoking it
-# AIzaSyBk5ckNmaWTojmvBRvuLFOoW9lXMHf2LME
-backup_key = "AIza" + "SyBk" + "5ckN" + "maWT" + "ojmv" + "BRvu" + "LFOo" + "W9lX" + "MHf2" + "LME"
-api_key = backup_key # Completely ignore Render's dashboard
+# Read the API key from the environment
+api_key = os.environ.get("GEMINI_API_KEY")
 
 if not api_key:
     raise ValueError("GEMINI_API_KEY environment variable not set. Please check your .env file.")
