@@ -3,19 +3,18 @@ import os
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-import google.generativeai as genai
+from groq import Groq
 from typing import Optional
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # Read the API key from the environment
-api_key = os.environ.get("GEMINI_API_KEY")
+api_key = os.environ.get("GROQ_API_KEY")
 
 if not api_key:
-    raise ValueError("GEMINI_API_KEY environment variable not set. Please check your .env file.")
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash-latest', generation_config={"response_mime_type": "application/json"})
+    raise ValueError("GROQ_API_KEY environment variable not set. Please check your .env file.")
+client = Groq(api_key=api_key)
 
 app = FastAPI(title="GenQuiz Unified API")
 
@@ -76,16 +75,29 @@ Rules you must follow strictly:
 """
 
     try:
+        file_content = ""
         if file and mime_type:
-            part = {
-                "mime_type": mime_type,
-                "data": file_bytes
-            }
-            response = model.generate_content([prompt, part])
-        else:
-            response = model.generate_content(prompt)
+            try:
+                file_content = "\n\n[Attached Syllabus Content:]\n" + file_bytes.decode('utf-8')
+            except:
+                file_content = "\n\n[An unreadable file was attached. Please rely on the topic names instead.]"
+                
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a JSON-only API. You must return only valid JSON."
+                },
+                {
+                    "role": "user",
+                    "content": prompt + file_content,
+                }
+            ],
+            model="llama3-8b-8192",
+            response_format={"type": "json_object"},
+        )
         
-        output_text = response.text.strip()
+        output_text = chat_completion.choices[0].message.content.strip()
         if output_text.startswith("```json"):
             output_text = output_text[7:]
         elif output_text.startswith("```"):
