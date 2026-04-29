@@ -45,10 +45,13 @@ async def generate_quiz(
 
     prompt = f"""You are the backend brain of an aptitude quiz application called GenQuiz.
 Your job is to generate highly dynamic, real-world aptitude test questions. These should be modeled after actual corporate placement exams (like TCS, Infosys, Amazon, etc.) and standard competitive assessments.
-The questions must test practical problem-solving, critical thinking, and real-world application of concepts covering the requested sections: {sections_str}.
 
+CRITICAL INSTRUCTION: You must focus heavily on programming languages (Python, Java, C++, JavaScript), data structures, algorithms, and technical coding concepts. Even for logical and quantitative sections, frame the problems around coding scenarios, debugging, software engineering, or computational logic where possible to better prepare students for technical interviews.
+
+The questions must cover the requested sections: {sections_str}.
 Difficulty level requested: {difficulty}
-Please generate EXACTLY {count_per_section} questions for EACH requested section.
+
+Please generate EXACTLY {count_per_section} questions IN TOTAL across all sections combined. Do NOT generate {count_per_section} per section. Distribute these {count_per_section} questions roughly evenly among the requested sections.
 
 If a file/image (like a syllabus) is attached alongside this prompt, USE IT. Base the questions deeply on the topics and difficulty indicated in that uploaded document.
 
