@@ -43,15 +43,30 @@ async def generate_quiz(
 
     sections_str = ", ".join(section_list)
 
-    prompt = f"""You are the backend brain of an aptitude quiz application called GenQuiz.
-Your job is to generate highly dynamic, real-world aptitude test questions. These should be modeled after actual corporate placement exams (like TCS, Infosys, Amazon, etc.) and standard competitive assessments.
+    total_requested = count_per_section
+    num_sections = len(section_list)
+    base_count = total_requested // num_sections
+    remainder = total_requested % num_sections
 
-CRITICAL INSTRUCTION: You must focus heavily on programming languages (Python, Java, C++, JavaScript), data structures, algorithms, and technical coding concepts. Even for logical and quantitative sections, frame the problems around coding scenarios, debugging, software engineering, or computational logic where possible to better prepare students for technical interviews.
+    section_counts = {}
+    for i, sec in enumerate(section_list):
+        section_counts[sec] = base_count + (1 if i < remainder else 0)
+        
+    allocation_str = "\n".join([f"- {sec}: Generate EXACTLY {count} questions" for sec, count in section_counts.items()])
 
-The questions must cover the requested sections: {sections_str}.
+    prompt = f"""You are the backend brain of a TECHNICAL CODING assessment platform called GenQuiz.
+Your ONLY job is to generate highly technical, programming-focused test questions. These must be modeled after technical rounds for software engineering roles at top tech companies.
+
+CRITICAL INSTRUCTION: EVERY SINGLE QUESTION MUST BE ABOUT PROGRAMMING.
+- Focus exclusively on: Python, Java, C++, JavaScript, Data Structures, Algorithms, Time Complexity, Debugging, SQL, and System Design.
+- If the section is "logical", make it about tracing code execution, finding bugs, or algorithmic logic.
+- If the section is "quant", make it about calculating time/space complexity, array indices, or binary/hexadecimal math.
+- DO NOT generate generic aptitude questions about trains, ages, or snails.
+
 Difficulty level requested: {difficulty}
 
-Please generate EXACTLY {count_per_section} questions IN TOTAL across all sections combined. Do NOT generate {count_per_section} per section. Distribute these {count_per_section} questions roughly evenly among the requested sections.
+Here is your STRICT quota allocation for this request. You MUST generate exactly this many questions per section, no more, no less:
+{allocation_str}
 
 If a file/image (like a syllabus) is attached alongside this prompt, USE IT. Base the questions deeply on the topics and difficulty indicated in that uploaded document.
 
