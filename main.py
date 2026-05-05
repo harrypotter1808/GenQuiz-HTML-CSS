@@ -48,11 +48,21 @@ async def generate_quiz(
     base_count = total_requested // num_sections
     remainder = total_requested % num_sections
 
-    section_counts = {}
+    json_template = {}
     for i, sec in enumerate(section_list):
-        section_counts[sec] = base_count + (1 if i < remainder else 0)
-        
-    allocation_str = "\n".join([f"- {sec}: Generate EXACTLY {count} questions" for sec, count in section_counts.items()])
+        count = base_count + (1 if i < remainder else 0)
+        if count > 0:
+            json_template[sec] = [
+                {
+                    "q": "[Insert technical question text here]",
+                    "opts": ["[Option A]", "[Option B]", "[Option C]", "[Option D]"],
+                    "ans": 0,
+                    "exp": "[Brief explanation of the correct answer]",
+                    "section": sec
+                } for _ in range(count)
+            ]
+            
+    template_str = json.dumps(json_template, indent=2)
 
     prompt = f"""You are the backend brain of a TECHNICAL CODING assessment platform called GenQuiz.
 Your ONLY job is to generate highly technical, programming-focused test questions. These must be modeled after technical rounds for software engineering roles at top tech companies.
@@ -65,31 +75,11 @@ CRITICAL INSTRUCTION: EVERY SINGLE QUESTION MUST BE ABOUT PROGRAMMING.
 
 Difficulty level requested: {difficulty}
 
-Here is your STRICT quota allocation for this request. You MUST generate exactly this many questions per section, no more, no less:
-{allocation_str}
-
 If a file/image (like a syllabus) is attached alongside this prompt, USE IT. Base the questions deeply on the topics and difficulty indicated in that uploaded document.
 
-You MUST respond with ONLY a valid JSON object in EXACTLY this structure - no markdown, no backticks:
-{{
-  "{section_list[0] if len(section_list) > 0 else 'english'}": [
-    {{
-      "q": "Question text here?",
-      "opts": ["Option A", "Option B", "Option C", "Option D"],
-      "ans": 1,
-      "exp": "Brief explanation of the correct answer.",
-      "section": "{section_list[0] if len(section_list) > 0 else 'english'}"
-    }}
-  ]
-}}
-Include ALL these sections in the root object: {sections_str}.
-Rules you must follow strictly:
-- "ans" is the ZERO-BASED index of the correct answer in "opts"
-- All 4 options must be plausible, only one correct
-- "exp" must be concise (1-2 sentences max)
-- Questions must match the requested difficulty: {difficulty}
-- Never repeat questions across calls
-- JSON MUST BE STRICTLY FORMATTED!
+You MUST respond by filling out the following JSON template EXACTLY. Do NOT add or remove any questions from the arrays. Simply replace the placeholder strings with the actual questions, options, and explanations. Remember that "ans" is the ZERO-BASED index of the correct option.
+
+{template_str}
 """
 
     try:
